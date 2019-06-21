@@ -2,21 +2,31 @@ import snowboydecoder
 import sys
 import signal
 import requests
+import socket
+
+UDP_IP = "0.0.0.0"
+UDP_PORT = 6677
+message = ""
 
 # Demo code for listening two hotwords at the same time
 
 interrupted = False
 
+sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
 def requests_open():
+    message = "Open Light"
     r = requests.post('https://httpbin.org/post')
     print(r.text)
     print("Open")
+    sock.sendto(message,(UDP_IP,UDP_PORT))
 
 def requests_close():
+    message = "Close Light"
     r = requests.get('https://httpbin.org/get')
     print(r.text)
     print("Close")
+    sock.sendto(message,(UDP_IP,UDP_PORT))
 
 
 def signal_handler(signal, frame):
